@@ -36,7 +36,7 @@ public class CustomerRepository {
 	 * @return 検索結果
 	 */
 	public List<Customer> findAll() {
-		// SQL文
+	    // SQL文
 	    String sql = "SELECT id, first_name, last_name FROM customer";
 	    // 実行結果
 	    List<Customer> customers = template.query(sql, customerRowMapper);
