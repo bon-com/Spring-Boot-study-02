@@ -1,5 +1,6 @@
 package com.example.demo03.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +19,18 @@ import com.example.demo03.domain.Customer;
 public class CustomerRepository {
 	@Autowired
 	private NamedParameterJdbcTemplate template;
-	
+
 	/**
 	 * DBの結果（rs）をCustomerオブジェクトにバインドする
 	 */
 	private static final RowMapper<Customer> customerRowMapper = (rs, i) -> {
-        Customer customer = new Customer();
-        customer.setId(rs.getInt("id"));
-        customer.setFirstName(rs.getString("first_name"));
-        customer.setLastName(rs.getString("last_name"));
-        return customer;
+		Customer customer = new Customer();
+		customer.setId(rs.getInt("id"));
+		customer.setFirstName(rs.getString("first_name"));
+		customer.setLastName(rs.getString("last_name"));
+		return customer;
 	};
-	
+
 	/**
 	 * 利用者全検索
 	 * 
@@ -37,13 +38,13 @@ public class CustomerRepository {
 	 */
 	public List<Customer> findAll() {
 		// SQL文
-	    String sql = "SELECT id, first_name, last_name FROM customer";
-	    // 実行結果
-	    List<Customer> customers = template.query(sql, customerRowMapper);
-	    
-	    return customers;
+		String sql = "SELECT id, first_name, last_name FROM customer";
+		// 実行結果
+		List<Customer> customers = template.query(sql, customerRowMapper);
+
+		return customers;
 	}
-	
+
 	/**
 	 * 利用者ID検索
 	 * 
@@ -61,7 +62,7 @@ public class CustomerRepository {
 
 		return resCustomer;
 	}
-	
+
 	/**
 	 * 利用者登録または更新
 	 * 
@@ -76,14 +77,19 @@ public class CustomerRepository {
 		} else {
 			// 更新
 			sql = "UPDATE customer SET first_name=:firstName, last_name=:lastName WHERE id=:id";
-			
+
 		}
 		// パラメータ設定
 		SqlParameterSource param = new BeanPropertySqlParameterSource(customer);
 		// 実行
 		template.update(sql, param);
 	}
-	
+
+	/**
+	 * 利用者の削除
+	 * 
+	 * @param id
+	 */
 	public void delete(int id) {
 		// SQL文
 		String sql = "DELETE FROM customer WHERE id=:id";
@@ -92,6 +98,23 @@ public class CustomerRepository {
 		param.addValue("id", id);
 		// 実行
 		template.update(sql, param);
+	}
+	
+	public void saveMulti(List<Customer> customerList) {
+		
+		String sql = "INSERT INTO customer(first_name, last_name) VALUES (:firstName, :lastName)";
+		
+		List<SqlParameterSource> paramList = new ArrayList<>();
+		for (Customer customer : customerList) {
+			SqlParameterSource param = new BeanPropertySqlParameterSource(customer);
+			paramList.add(param);
+		}
+		
+		System.out.println("new SqlParameterSource[batchArgs.size()]");
+		System.out.println(paramList);
+		System.out.println(paramList.toArray(new SqlParameterSource[paramList.size()]));
+		
+		template.batchUpdate(sql, paramList.toArray(new SqlParameterSource[paramList.size()]));
 	}
 
 }
