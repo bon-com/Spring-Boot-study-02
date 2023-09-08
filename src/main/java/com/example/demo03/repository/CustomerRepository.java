@@ -101,6 +101,11 @@ public class CustomerRepository {
 		template.update(sql, param);
 	}
 	
+	/**
+	 * 利用者リストの登録
+	 * 
+	 * @param customerList
+	 */
 	public void saveMulti(List<Customer> customerList) {
 		
 		String sql = "INSERT INTO customer(first_name, last_name) VALUES (:firstName, :lastName)";
