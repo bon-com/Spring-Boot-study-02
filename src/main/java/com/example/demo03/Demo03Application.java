@@ -50,6 +50,7 @@ public class Demo03Application implements CommandLineRunner {
 		repository.delete(2);
 		
 		// 複数登録
+		System.out.println("複数登録-------");
 		List<Customer> inputCustomers = new ArrayList<>();
 		Arrays.asList(1, 2, 3).forEach(i -> {
 			Customer customer = new Customer();
@@ -58,7 +59,6 @@ public class Demo03Application implements CommandLineRunner {
 			inputCustomers.add(customer);
 		});
 		repository.saveMulti(inputCustomers);
-		
 		
 		// 全検索
 		System.out.println("全検索-------");
