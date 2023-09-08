@@ -43,6 +43,7 @@ public class CustomerRepository {
 		List<Customer> customers = template.query(sql, customerRowMapper);
 
 		return customers;
+
 	}
 
 	/**
@@ -109,10 +110,6 @@ public class CustomerRepository {
 			SqlParameterSource param = new BeanPropertySqlParameterSource(customer);
 			paramList.add(param);
 		}
-		
-		System.out.println("new SqlParameterSource[batchArgs.size()]");
-		System.out.println(paramList);
-		System.out.println(paramList.toArray(new SqlParameterSource[paramList.size()]));
 		
 		template.batchUpdate(sql, paramList.toArray(new SqlParameterSource[paramList.size()]));
 	}
