@@ -107,15 +107,15 @@ public class CustomerRepository {
 	 * @param customerList
 	 */
 	public void saveMulti(List<Customer> customerList) {
-		
+		// SQL文
 		String sql = "INSERT INTO customer(first_name, last_name) VALUES (:firstName, :lastName)";
-		
+		// パラメータ設定
 		List<SqlParameterSource> paramList = new ArrayList<>();
 		for (Customer customer : customerList) {
 			SqlParameterSource param = new BeanPropertySqlParameterSource(customer);
 			paramList.add(param);
 		}
-		
+		// batchUpdateを使用して複数のレコードを登録
 		template.batchUpdate(sql, paramList.toArray(new SqlParameterSource[paramList.size()]));
 	}
 
